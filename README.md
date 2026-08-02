@@ -37,6 +37,12 @@ To keep everything working, do not remove `<!-- ... -->` sections.
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 
+## Strategy Backtester
+
+This repository also contains [`backtester/`](./backtester) — a standalone full-stack app
+(Node/Express + React) that runs ten recurring-buy strategies against a ticker's historical
+prices and compares them. See its [README](./backtester/README.md) to run it.
+
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
