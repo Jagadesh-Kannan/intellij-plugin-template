@@ -1,0 +1,10 @@
+{
+  "index": "SPY",
+  "watchlist": ["SPY", "QQQ", "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META"],
+  "params": {
+    "redDayBasis": "prevClose",
+    "weekdayHolidayPolicy": "nextTradingDay",
+    "crashDrawdownPct": 10,
+    "crashCooldownDays": 20
+  }
+}

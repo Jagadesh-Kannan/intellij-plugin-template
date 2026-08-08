@@ -63,6 +63,50 @@ shares (whole-share mode) stays as cash and rolls into the next buy.
 | Avg cost | Total paid ÷ shares held. Compare against **avg price** (mean close over the range): below it means the strategy bought at better-than-average prices. |
 | Max drawdown | Largest peak-to-trough fall of portfolio value, measured on value *above contributions* so that fresh cash arriving mid-drawdown does not look like a recovery. |
 
+## Daily post-close scan
+
+`npm run scan` applies the same rules to *today's* bar instead of history: it reports the
+index's drawdown, whether that crosses the crash threshold, and which strategies fired on
+which watchlist tickers.
+
+```bash
+cp watchlist.example.json watchlist.json   # then edit the tickers
+npm run scan
+```
+
+Configuration is `watchlist.json`, overridable per run by `WATCHLIST` (comma-separated),
+`INDEX_TICKER`, `CRASH_PCT`, and `WATCHLIST_FILE`. `JSON_OUT=1` appends the raw report.
+
+Exit codes are meant for scripting: **0** no crash, **2** crash threshold breached,
+**1** the scan could not be trusted.
+
+That last one matters. The scan **refuses to run on synthetic data** — if no live provider
+is reachable it fails loudly rather than reporting simulated prices as real. It also warns
+when the feed's latest bar has fallen more than a few days behind.
+
+### Scheduling it (macOS)
+
+```bash
+sed -i '' "s|REPO_PATH|$(pwd)|g" scripts/com.backtester.market-scan.plist
+cp scripts/com.backtester.market-scan.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.backtester.market-scan.plist
+```
+
+Runs weekdays at 17:30 local — 90 minutes after the 16:00 ET close, since end-of-day bars
+take a while to publish. launchd uses local time, so the EST/EDT switch is handled for you
+if the Mac is on US Eastern; adjust `Hour` otherwise. Reports append to
+`logs/market-scan.log`, and a crash or a failed scan raises a macOS notification.
+
+Test the wrapper before trusting the schedule:
+
+```bash
+./scripts/market-scan.sh; echo "exit: $?"
+```
+
+**What it does not do:** pick stocks. A fired rule means "this strategy would have bought
+today" — it is a mechanical trigger on closing prices, not a recommendation, and the report
+says so in as many words.
+
 ## Market data
 
 Providers are tried in order and the first success wins:

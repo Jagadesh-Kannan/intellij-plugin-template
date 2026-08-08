@@ -8,6 +8,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
+    "scan": "ALLOW_SYNTHETIC_FALLBACK=false tsx src/scan/cli.ts",
+    "scan:built": "ALLOW_SYNTHETIC_FALLBACK=false node dist/scan/cli.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit"

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd job: run the market scan on weekday afternoons after the US close.
+
+  StartCalendarInterval fires in the machine's LOCAL time, so this handles the
+  EST/EDT switch on its own if the Mac is set to US Eastern. On any other
+  timezone, change Hour to 90 minutes after your local equivalent of the 16:00
+  ET close — end-of-day bars take a while to publish.
+
+  Install (edit REPO_PATH first):
+    cp scripts/com.backtester.market-scan.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.backtester.market-scan.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.backtester.market-scan</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>REPO_PATH/scripts/market-scan.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>REPO_PATH/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>REPO_PATH/logs/launchd.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
